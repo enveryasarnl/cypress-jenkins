@@ -5,13 +5,19 @@ def xray
 
 pipeline {
     agent { 
-        dockerfile true 
+        docker {
+            image 'cypress/base:10'
+        }    
     }
     stages {
         stage('BUILD & RUN TESTS') {
         parallel {
             stage('ADVANCED FILTER') {
-                    agent any  
+                agent { 
+                    docker {
+                        image 'cypress/base:10'
+                    }    
+                }  
                 steps {
                     script {
                         sh 'npm install'
@@ -26,7 +32,11 @@ pipeline {
                 }
             }
             stage('SMART AND NORMAL FILTERS') {
-                agent any
+                agent { 
+                    docker {
+                        image 'cypress/base:10'
+                    }    
+                }
                 steps {
                     script {
                         sh 'npm install'
@@ -44,7 +54,9 @@ pipeline {
         }
         stage('MERGE J-UNIT REPORT') {
             agent { 
-                dockerfile true 
+                docker {
+                    image 'cypress/base:10'
+                }    
             }
             steps{
                 script{
