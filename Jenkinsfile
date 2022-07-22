@@ -4,12 +4,13 @@ String datePart = date.format("dd/MM/yyyy/HH:mm", TimeZone.getTimeZone('Europe/A
 def xray
 
 pipeline {
-    agent { dockerfile true }
+    agent { 
+        dockerfile true 
+    }
     stages {
         stage('BUILD & RUN TESTS') {
         parallel {
             stage('ADVANCED FILTER') {
-                agent { dockerfile true }
                 steps {
                     script {
                         sh 'npm install'
@@ -41,7 +42,6 @@ pipeline {
         }
         }
         stage('MERGE J-UNIT REPORT') {
-            agent { dockerfile true }
             steps{
                 script{
                 sh 'npm install'
