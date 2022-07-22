@@ -63,21 +63,5 @@ pipeline {
                 }
             }
         }
-        stage('SEND TEST RESULTS TO JIRA'){
-            steps{
-                script {
-                //   unstash 'end-report'
-                //   xray_auth = load 'xray_authentication.groovy'
-                }
-            }
-        }
-        stage('SEND SLACK NOTIFIER'){
-            steps{
-                script{
-                //   unstash 'end-report'
-                //   slack = load 'slack.groovy'
-                }
-            }
-        }
     }
 }
