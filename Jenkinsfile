@@ -4,20 +4,23 @@ String datePart = date.format("dd/MM/yyyy/HH:mm", TimeZone.getTimeZone('Europe/A
 def xray
 
 pipeline {
+    options {
+        timeout(time: 1, unit: 'HOURS')
+    }
     agent { 
         docker {
-            image 'cypress/base:10'
+            image 'cypress/included:8.6.0'
         }    
     }
     stages {
         stage('BUILD & RUN TESTS') {
         parallel {
             stage('ADVANCED FILTER') {
-                agent { 
-                    docker {
-                        image 'cypress/base:10'
-                    }    
-                }  
+                // agent { 
+                //     docker {
+                //         image 'cypress/included:8.6.0'
+                //     }    
+                // }  
                 steps {
                     script {
                         sh 'npm install'
@@ -32,11 +35,11 @@ pipeline {
                 }
             }
             stage('SMART AND NORMAL FILTERS') {
-                agent { 
-                    docker {
-                        image 'cypress/base:10'
-                    }    
-                }
+                // agent { 
+                //     docker {
+                //         image 'cypress/included:8.6.0'
+                //     }    
+                // }
                 steps {
                     script {
                         sh 'npm install'
@@ -53,11 +56,11 @@ pipeline {
         }
         }
         stage('MERGE J-UNIT REPORT') {
-            agent { 
-                docker {
-                    image 'cypress/base:10'
-                }    
-            }
+            // agent { 
+            //     docker {
+            //         image 'cypress/included:8.6.0'
+            //     }    
+            // }
             steps{
                 script{
                 sh 'npm install'
