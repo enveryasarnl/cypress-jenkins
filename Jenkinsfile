@@ -9,7 +9,7 @@ pipeline {
     }
     agent { 
         docker {
-            image 'cypress/included:8.6.0'
+            image 'cypress/base:10'
         }    
     }
     stages {
