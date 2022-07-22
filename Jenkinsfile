@@ -11,6 +11,9 @@ pipeline {
         stage('BUILD & RUN TESTS') {
         parallel {
             stage('ADVANCED FILTER') {
+                    agent { 
+                        dockerfile true 
+                    }   
                 steps {
                     script {
                         sh 'npm install'
@@ -25,7 +28,9 @@ pipeline {
                 }
             }
             stage('SMART AND NORMAL FILTERS') {
-                agent any
+                agent { 
+                    dockerfile true 
+                }
                 steps {
                     script {
                         sh 'npm install'
@@ -42,6 +47,9 @@ pipeline {
         }
         }
         stage('MERGE J-UNIT REPORT') {
+            agent { 
+                dockerfile true 
+            }
             steps{
                 script{
                 sh 'npm install'
