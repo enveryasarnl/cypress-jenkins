@@ -1,86 +1,25 @@
-Date date = new Date()
-String datePart = date.format("dd/MM/yyyy/HH:mm", TimeZone.getTimeZone('Europe/Amsterdam'))
-
-def xray
-
 pipeline {
-    options {
-        timeout(time: 1, unit: 'HOURS')
+  agent {
+    // this image provides everything needed to run Cypress
+    docker {
+      image 'cypress/base:10'
     }
-    agent { 
-        docker {
-            image 'cypress/base:10'
-        }    
+  }
+
+  stages {
+    stage('build and test') {
+      environment {
+        // we will be recording test results and video on Cypress dashboard
+        // to record we need to set an environment variable
+        // we can load the record key variable from credentials store
+        // see https://jenkins.io/doc/book/using/using-credentials/
+        // CYPRESS_RECORD_KEY = credentials('cypress-example-kitchensink-record-key')
+      }
+
+      steps {
+        sh 'npm ci'
+        sh "npm cypress run --browser chrome"
+      }
     }
-    stages {
-        stage('BUILD & RUN TESTS') {
-        parallel {
-            stage('ADVANCED FILTER') {
-                // agent { 
-                //     docker {
-                //         image 'cypress/included:8.6.0'
-                //     }    
-                // }  
-                steps {
-                    script {
-                        sh 'npm install'
-                        sh "npx cypress run" + " --config-file ${params.ENVIRONMENT}" + " --headless --browser chrome --spec " + "cypress/e2e/1-getting-started/todo.cy.js"
-                    }
-                }
-                post {
-                    always {
-                    stash includes: 'cypress/results/**', name: 'todo-reports', allowEmpty: true
-                    stash includes: 'cypress/videos/**/*', name: 'todo-videos', allowEmpty: true
-                    }
-                }
-            }
-            stage('SMART AND NORMAL FILTERS') {
-                // agent { 
-                //     docker {
-                //         image 'cypress/included:8.6.0'
-                //     }    
-                // }
-                steps {
-                    script {
-                        sh 'npm install'
-                        sh "npx cypress run" + " --config-file ${params.ENVIRONMENT}" + " --headless --browser chrome --spec "  + "cypress/e2e/2-advanced-examples/actions.cy.js"
-                    }
-                }
-                post {
-                    always {
-                    stash includes: 'cypress/results/**', name: 'actions-reports', allowEmpty: true
-                    stash includes: 'cypress/videos/**/*', name: 'actions-videos', allowEmpty: true
-                    }
-                }
-            }
-        }
-        }
-        stage('MERGE J-UNIT REPORT') {
-            // agent { 
-            //     docker {
-            //         image 'cypress/included:8.6.0'
-            //     }    
-            // }
-            steps{
-                script{
-                sh 'npm install'
-                unstash 'todo-reports'
-                unstash 'actions-reports'
-
-                unstash 'todo-videos'
-                unstash 'actions-videos'
-
-                sh 'npx junit-merge -d cypress/results/junit -o cypress/results/junit/results.xml'
-
-                stash includes: 'cypress/results/junit/results.xml', name: 'end-report'
-                sh 'rm -rf cypress/results/junit/results-*.xml'
-
-                zip zipFile: 'videos.zip', archive: true, dir: 'cypress/videos'
-                zip zipFile: 'report.zip', archive: true, dir: 'cypress/results/'
-
-                archiveArtifacts artifacts: '*.zip'
-                }
-            }
-        }
-    }
+  }
 }
