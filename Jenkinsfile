@@ -10,7 +10,7 @@ tools {nodejs "node"}
   stages {
     stage('build and test') {
       steps {
-        sh 'npm ci'
+        sh 'npm i'
         sh "npm cypress run --browser chrome"
       }
     }
