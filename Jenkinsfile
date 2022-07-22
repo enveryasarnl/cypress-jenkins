@@ -1,4 +1,3 @@
-@Library('Common@master') _
 Date date = new Date()
 String datePart = date.format("dd/MM/yyyy/HH:mm", TimeZone.getTimeZone('Europe/Amsterdam'))
 
