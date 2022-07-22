@@ -11,9 +11,7 @@ pipeline {
         stage('BUILD & RUN TESTS') {
         parallel {
             stage('ADVANCED FILTER') {
-                    agent { 
-                        dockerfile true 
-                    }   
+                    agent any  
                 steps {
                     script {
                         sh 'npm install'
@@ -28,9 +26,7 @@ pipeline {
                 }
             }
             stage('SMART AND NORMAL FILTERS') {
-                agent { 
-                    dockerfile true 
-                }
+                agent any
                 steps {
                     script {
                         sh 'npm install'
